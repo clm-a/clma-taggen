@@ -1,0 +1,64 @@
+name: Test & Deploy
+on:
+  push:
+    branches:
+      - main
+      - dev
+jobs:
+  # train:
+  #   name: Train Model
+  #   runs-on: ubuntu-latest
+  #   timeout-minutes: 360
+  #   steps:
+  #     - uses: pierotofy/set-swap-space@master
+  #       with:
+  #         swap-size-gb: 10
+  #     - uses: actions/checkout@v4
+  #       with:
+  #         lfs: true
+  #     - uses: actions/setup-python@v5
+  #       with:
+  #         python-version: "3.11.10"
+  #     - run: echo ${{ github.run_id }}
+  #     - run: pip install -r requirements/train.txt
+  #     - run: python -m tags_generator.word2vec.train train
+  #     - uses: actions/upload-artifact@v4
+  #       with:
+  #         retention-days: 5
+  #         name: model_dump
+  #         path: tags_generator/word2vec/dumps/*
+  # test:
+  #   name: Test Model
+  #   needs: train
+  #   runs-on: ubuntu-latest
+  #   concurrency: deploy-group    # optional: ensure only one action runs at a time
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #     - uses: actions/setup-python@v5
+  #       with:
+  #         python-version: "3.11.10"
+  #     # - run: pip install -r requirements/test.txt
+  #     - run: pip install pytest
+  #     - run: pytest
+
+  deploy:
+    env:
+      MODEL_DUMP_PATH: 'model_dump'
+    name: API Deployment on Fly.io
+    #needs: test
+    runs-on: ubuntu-latest
+    concurrency: deploy-group    # optional: ensure only one action runs at a time
+    steps:
+      - uses: actions/checkout@v4
+      - uses: superfly/flyctl-actions/setup-flyctl@master
+      - name: Download a single artifact
+        uses: actions/download-artifact@v4
+        with:
+          run-id: 11434085373
+          github-token: "${{ secrets.GH_PAT }}"
+      - name: Display structure of downloaded files
+        run: ls -R .
+      - run: flyctl deploy --remote-only
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+

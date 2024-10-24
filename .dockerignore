@@ -1,0 +1,6 @@
+*
+
+!requirements.txt
+!api/server.py
+!tags_generator/*
+!model_dump/*
