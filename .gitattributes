@@ -1,0 +1,7 @@
+data/monthly_best_1000_cleaned.csv filter=lfs diff=lfs merge=lfs -text
+data/monthly_best_1000_combined.csv filter=lfs diff=lfs merge=lfs -text
+data/monthly_best_1000/2020.csv filter=lfs diff=lfs merge=lfs -text
+data/monthly_best_1000/2021.csv filter=lfs diff=lfs merge=lfs -text
+data/monthly_best_1000/2022.csv filter=lfs diff=lfs merge=lfs -text
+data/monthly_best_1000/2023.csv filter=lfs diff=lfs merge=lfs -text
+data/monthly_best_1000/2024.csv filter=lfs diff=lfs merge=lfs -text

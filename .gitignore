@@ -1,3 +1,7 @@
 /.ipynb_checkpoints
-/.pyvenv
+.venv
 /mlruns
+__pycache__
+**/dumps/*
+!**/dumps/.keep
+.pytest_cache
