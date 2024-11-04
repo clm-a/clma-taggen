@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <title>presentation</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="https://unpkg.com/reveal.js@^4//dist/reset.css">
+  <link rel="stylesheet" href="https://unpkg.com/reveal.js@^4//dist/reveal.css">
+  <style>
+    .reveal .sourceCode {  /* see #7635 */
+      overflow: visible;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+  <link rel="stylesheet" href="https://unpkg.com/reveal.js@^4//dist/theme/solarized.css" id="theme">
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+
+<section class="slide level2">
+
+<!-- pandoc -t revealjs -s presentation.md -o presentation.html -V theme=solarized -->
+<p><img data-src="./images/stackoverflow.png" width="450" /></p>
+<h3 id="système-de-suggestion-de-tags">Système de suggestion de
+tags</h3>
+<p><em>Clément ALEXANDRE - OCIML Nov 2024</em></p>
+</section>
+<section class="slide level2">
+
+<style>
+  .cv p, .cv img{
+    margin:0
+  }
+  .cv table{
+    font-size: 14pt;
+    display: inline;
+    margin:0;
+    margin-right:20px;
+    margin-bottom:20px;
+  }
+  .cv table:last-child{
+    margin-right:0;
+  }
+
+  </style>
+<div class="cv"
+style="background-color:white;padding-left:20px;padding-right:20px;padding-top:20px;border-radius:10px;">
+<div
+style="display:flex;justify-content:space-between;align-items:center;">
+<div>
+Clément ALEXANDRE
+</div>
+<p><img src="./images/clément.png" height="100px"></p>
+</div>
+<p><img src="./images/stack.png" height="60px" /></p>
+<div
+style="display:inline-flex;align-items: start;margin-left:auto; margin-right:auto;">
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: right;"> </th>
+<th>Expérience pro</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">2022 - AJD</td>
+<td>VinoVirtual : Codirigeant / DT</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">2020 - 2022</td>
+<td>Synbioz : Développeur senior RoR</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">2014 - 2019</td>
+<td>Margotte tournicote : Codirigeant</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">2010 - 2011</td>
+<td>Submate : Lead developer</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">–</td>
+<td>Formateur indépendant</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">–</td>
+<td>Freelance</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: right;"> </th>
+<th>Formation</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">2023 - AJD</td>
+<td>OC IML</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">2012</td>
+<td>DU Création d’entreprise</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">2008 - 2010</td>
+<td>Master Développement web</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">2006 - 2009</td>
+<td>Licence pro informatique embarquée</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">2004 - 2006</td>
+<td>DUT GEII</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<h3 id="sommaire">Sommaire</h3>
+<ol type="1">
+<li>Rappel de la problématique</li>
+<li>Conformité RGPD</li>
+<li>Récupération des données</li>
+<li>Analyse exploratoire</li>
+<li>Approche non supérvisée</li>
+<li>Approche supervisée</li>
+<li>Exposition API et déploiement continu</li>
+<li>Mise en oeuvre MLOps</li>
+<li>Conclusions et perspectives</li>
+</ol>
+</section>
+<section id="rappel-de-la-problématique" class="slide level2">
+<h2>1. Rappel de la problématique</h2>
+<p><strong>Suggestion automatique de tags</strong> pour
+<strong>catégoriser</strong> une question posée sur StackOverflow.</p>
+<div class="fragment" style="margin-top:40px">
+<p>👉 Améliorer les méta-informations des contenus</p>
+</div>
+<div class="fragment">
+<p>👉 Améliorer de l’expérience utilisateur</p>
+</div>
+</section>
+<section id="conformité-rgpd" class="slide level2">
+<h2>1. Conformité RGPD</h2>
+<div style="font-size:20pt">
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: right;"> </th>
+<th style="text-align: left;"> </th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;"><strong>Finalité</strong></td>
+<td style="text-align: left;">L’objectif est uniquement de viser à
+améliorer la saisie</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;"><strong>Pertinence</strong></td>
+<td style="text-align: left;">Les données non pertinentes sont
+filtrées</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;"><strong>Conservation</strong></td>
+<td style="text-align: left;">Modèle réentraîné périodiquement</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;"><strong>Sécurité</strong></td>
+<td style="text-align: left;">Stockage chiffré, accès restreint par mot
+de passe</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;"><strong>Droit des personnes</strong></td>
+<td style="text-align: left;">Mises à jour dynamiques selon les CGV de
+StackOverflow</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section class="slide level2">
+
+<style>
+.left *{
+  margin-left:5vw!important;
+  text-align:left!important;
+}
+  </style>
+</section>
+<section id="récupération-des-données" class="slide level2">
+<h2>Récupération des données</h2>
+<div class="left">
+<div class="fragment">
+<ol type="1">
+<li>StackOverflow API (c.f. notebook)</li>
+</ol>
+</div>
+<div class="fragment">
+<ol start="2" type="1">
+<li>Data Exchange Explorer (solution retenue)</li>
+</ol>
+</div>
+<div class="fragment">
+<p>👉 1000 meilleurs questions mensuelles</p>
+</div>
+</div>
+</section>
+<section id="analyse-exploratoire-des-données" class="slide level2">
+<h2>Analyse exploratoire des données</h2>
+</section>
+<section class="slide level2">
+
+<h3 id="approche-non-supervisée-avec-lda">Approche non supervisée avec
+LDA</h3>
+</section>
+<section class="slide level2">
+
+<h3 id="approche-supervisée-word2vec">Approche supervisée :
+Word2Vec</h3>
+</section>
+<section class="slide level2">
+
+<h3 id="approche-supervisée-use">Approche supervisée : USE</h3>
+</section>
+<section class="slide level2">
+
+<h3 id="approche-supervisée-bert">Approche supervisée : Bert</h3>
+</section>
+<section class="slide level2">
+
+<h3 id="exposition-api-et-déploiment-continu">Exposition API et
+déploiment continu</h3>
+</section>
+<section class="slide level2">
+
+<h3 id="approche-mlops">Approche MLOps</h3>
+</section>
+<section class="slide level2">
+
+<h3 id="conclusions-et-perspectives">Conclusions et perspectives</h3>
+</section>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/reveal.js@^4//dist/reveal.js"></script>
+
+  <!-- reveal.js plugins -->
+  <script src="https://unpkg.com/reveal.js@^4//plugin/notes/notes.js"></script>
+  <script src="https://unpkg.com/reveal.js@^4//plugin/search/search.js"></script>
+  <script src="https://unpkg.com/reveal.js@^4//plugin/zoom/zoom.js"></script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+        // Display controls in the bottom right corner
+        controls: true,
+
+        // Help the user learn the controls by providing hints, for example by
+        // bouncing the down arrow when they first encounter a vertical slide
+        controlsTutorial: true,
+
+        // Determines where controls appear, "edges" or "bottom-right"
+        controlsLayout: 'bottom-right',
+
+        // Visibility rule for backwards navigation arrows; "faded", "hidden"
+        // or "visible"
+        controlsBackArrows: 'faded',
+
+        // Display a presentation progress bar
+        progress: true,
+
+        // Display the page number of the current slide
+        slideNumber: false,
+
+        // 'all', 'print', or 'speaker'
+        showSlideNumber: 'all',
+
+        // Add the current slide number to the URL hash so that reloading the
+        // page/copying the URL will return you to the same slide
+        hash: true,
+
+        // Start with 1 for the hash rather than 0
+        hashOneBasedIndex: false,
+
+        // Flags if we should monitor the hash and change slides accordingly
+        respondToHashChanges: true,
+
+        // Push each slide change to the browser history
+        history: false,
+
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+
+        // Enable the slide overview mode
+        overview: true,
+
+        // Disables the default reveal.js slide layout (scaling and centering)
+        // so that you can use custom CSS layout
+        disableLayout: false,
+
+        // Vertical centering of slides
+        center: true,
+
+        // Enables touch navigation on devices with touch input
+        touch: true,
+
+        // Loop the presentation
+        loop: false,
+
+        // Change the presentation direction to be RTL
+        rtl: false,
+
+        // see https://revealjs.com/vertical-slides/#navigation-mode
+        navigationMode: 'default',
+
+        // Randomizes the order of slides each time the presentation loads
+        shuffle: false,
+
+        // Turns fragments on and off globally
+        fragments: true,
+
+        // Flags whether to include the current fragment in the URL,
+        // so that reloading brings you to the same fragment position
+        fragmentInURL: true,
+
+        // Flags if the presentation is running in an embedded mode,
+        // i.e. contained within a limited portion of the screen
+        embedded: false,
+
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+
+        // Flags if it should be possible to pause the presentation (blackout)
+        pause: true,
+
+        // Flags if speaker notes should be visible to all viewers
+        showNotes: false,
+
+        // Global override for autoplaying embedded media (null/true/false)
+        autoPlayMedia: null,
+
+        // Global override for preloading lazy-loaded iframes (null/true/false)
+        preloadIframes: null,
+
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+
+        // Use this method for navigation when auto-sliding
+        autoSlideMethod: null,
+
+        // Specify the average time in seconds that you think you will spend
+        // presenting each slide. This is used to show a pacing timer in the
+        // speaker view
+        defaultTiming: null,
+
+        // Enable slide navigation via mouse wheel
+        mouseWheel: false,
+
+        // The display mode that will be used to show slides
+        display: 'block',
+
+        // Hide cursor if inactive
+        hideInactiveCursor: true,
+
+        // Time before the cursor is hidden (in ms)
+        hideCursorTime: 5000,
+
+        // Opens links in an iframe preview overlay
+        previewLinks: false,
+
+        // Transition style (none/fade/slide/convex/concave/zoom)
+        transition: 'slide',
+
+        // Transition speed (default/fast/slow)
+        transitionSpeed: 'default',
+
+        // Transition style for full page slide backgrounds
+        // (none/fade/slide/convex/concave/zoom)
+        backgroundTransition: 'fade',
+
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+
+        // Number of slides away from the current that are visible on mobile
+        // devices. It is advisable to set this to a lower number than
+        // viewDistance in order to save resources.
+        mobileViewDistance: 2,
+
+        // reveal.js plugins
+        plugins: [
+          RevealNotes,
+          RevealSearch,
+          RevealZoom
+        ]
+      });
+    </script>
+    </body>
+</html>
