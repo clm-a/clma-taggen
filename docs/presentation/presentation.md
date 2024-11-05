@@ -128,6 +128,30 @@ ___
 ### Approche non supervisée avec LDA
 
 
+<div style="display:flex">
+
+![](images/lda_heatmap.png){style="height:20vh;width:auto"}
+
+![](images/lda_opt_graph.png){style="height:20vh;width:auto"}
+
+</div>
+
+<style>
+  .nomargin *{
+    margin: 0!important;
+  }
+</style>
+
+<div class="nomargin">
+<img src="images/lda_query.png"/>
+<img src="images/lda_predict.png" />
+</div>
+
+:::: fragment
+👉 Mise en oeuvre délicate
+::::
+
+
 ___
 
 ### Approche supervisée : Word2Vec
@@ -184,7 +208,7 @@ ___
 
 ### Exposition API et déploiment continu
 
-![CI/CD](images/cicd.png){style="height:40vh;width:auto"}
+![CI/CD](images/cicd.png){style="height:30vh;width:auto"}
 
 
 :::: fragment
@@ -199,7 +223,7 @@ ___
 ___
 
 
-### CICD
+### CICD 
 
 <!-- 
 ```mermaid
@@ -214,8 +238,11 @@ sequenceDiagram
     Fly Image builder-/->Fly: pull image
 ```
 -->
+<div style="display:flex">
+![](images/mermaid.png){style="height:30vh"}
 
-![](images/mermaid.png){style="height:50vh"}
+![](images/actions.png)
+</div>
 ___
 
 
@@ -238,7 +265,7 @@ ___
 ### Conclusions et perspectives
 
 :::: fragment
-👉 Word2Vec convaincant sans beaucoup d'optimisations
+👉 Word2Vec convaincant avec peu d'optimisations
 ::::
 
 :::: fragment
@@ -246,6 +273,6 @@ ___
 ::::
 
 :::: fragment
-👉 Enjeu important dans l'optimisation des paramètres
+👉 Enjeu important dans l'optimisation des paramètres pour la stabilité
 ::::
 

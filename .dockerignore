@@ -1,6 +1,6 @@
 *
 
-!requirements.txt
+!requirements/*
 !api/server.py
 !tags_generator/*
 !model_dump/*

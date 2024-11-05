@@ -5,7 +5,8 @@ ENV PYTHONUNBUFFERED=1 \
 WORKDIR /app
 
 RUN python -m venv .venv
-COPY ./requirements.txt ./
+COPY requirements requirements
+RUN ls
 RUN .venv/bin/pip install -r requirements/w2v_api_serving.txt
 
 FROM python:3.11.4-slim

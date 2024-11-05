@@ -241,6 +241,24 @@ StackOverflow</td>
 
 <h3 id="approche-non-supervisée-avec-lda">Approche non supervisée avec
 LDA</h3>
+<div style="display:flex">
+<p><img data-src="images/lda_heatmap.png"
+style="height:20vh;width:auto" /></p>
+<p><img data-src="images/lda_opt_graph.png"
+style="height:20vh;width:auto" /></p>
+</div>
+<style>
+  .nomargin *{
+    margin: 0!important;
+  }
+</style>
+<div class="nomargin">
+<p><img src="images/lda_query.png"/>
+<img src="images/lda_predict.png" /></p>
+</div>
+<div class="fragment">
+<p>👉 Mise en oeuvre délicate</p>
+</div>
 </section>
 <section class="slide level2">
 
@@ -290,7 +308,7 @@ Word2Vec</h3>
 <h3 id="exposition-api-et-déploiment-continu">Exposition API et
 déploiment continu</h3>
 <figure>
-<img data-src="images/cicd.png" style="height:40vh;width:auto"
+<img data-src="images/cicd.png" style="height:30vh;width:auto"
 alt="CI/CD" />
 <figcaption aria-hidden="true">CI/CD</figcaption>
 </figure>
@@ -317,7 +335,13 @@ sequenceDiagram
     Fly Image builder-/->Fly: pull image
 ```
 -->
-<p><img data-src="images/mermaid.png" style="height:50vh" /> ___</p>
+<div style="display:flex">
+<p><img data-src="images/mermaid.png" style="height:30vh" /></p>
+<p><img data-src="images/actions.png" /></p>
+</div>
+</section>
+<section class="slide level2">
+
 <h3 id="poc">POC</h3>
 </section>
 <section class="slide level2">
@@ -338,13 +362,14 @@ sequenceDiagram
 
 <h3 id="conclusions-et-perspectives">Conclusions et perspectives</h3>
 <div class="fragment">
-<p>👉 Word2Vec convaincant sans beaucoup d’optimisations</p>
+<p>👉 Word2Vec convaincant avec peu d’optimisations</p>
 </div>
 <div class="fragment">
 <p>👉 Difficulté de mise en oeuvre de BERT y compris en batch</p>
 </div>
 <div class="fragment">
-<p>👉 Enjeu important dans l’optimisation des paramètres</p>
+<p>👉 Enjeu important dans l’optimisation des paramètres pour la
+stabilité</p>
 </div>
 </section>
     </div>
