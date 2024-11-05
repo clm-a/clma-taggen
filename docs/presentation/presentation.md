@@ -80,7 +80,7 @@ ____
 :::::
 ____
 
-## 1. Conformité RGPD
+## 2. Conformité RGPD
 
 :::: {style="font-size:20pt"}
 &nbsp; | &nbsp;
@@ -95,7 +95,7 @@ ____
 ____
 
 
-## Récupération des données
+## 3. Récupération des données
 
 <style>
 .left *{
@@ -123,13 +123,18 @@ ____
 ___
 
 
-## Analyse exploratoire des données
+## 4. Analyse exploratoire des données
+<div class="nomargin">
+<div style="display:flex">
+![](images/expl1.png){style="height:20vh;width:auto"}
 
-
-
+![](images/expl2.png){style="height:20vh;width:auto"}
+</div>
+![](images/expl3.png)
+</div>
 ___
 
-### Approche non supervisée avec LDA
+### 5. Approche non supervisée avec LDA
 
 
 <div style="display:flex">
@@ -158,7 +163,7 @@ ___
 
 ___
 
-### Approche supervisée : Word2Vec
+### 6. Approche supervisée : Word2Vec
 
 :::: fragment
 👉 Entrainement rapide sur jeu de données complet
@@ -174,7 +179,7 @@ ___
 
 ___
 
-### Approche supervisée : USE
+### 6. Approche supervisée : USE
 
 :::: fragment
 👉 Prétraitement contre-productif
@@ -190,7 +195,7 @@ ___
 
 ___
 
-### Approche supervisée : Bert
+### 6. Approche supervisée : Bert
 
 :::: fragment
 👉 Prétraitement contre-productif
@@ -210,7 +215,7 @@ ___
 
 ___
 
-### Exposition API et déploiment continu
+### 7. Exposition API et déploiment continu
 
 ![CI/CD](images/cicd.png){style="height:30vh;width:auto"}
 
@@ -227,7 +232,7 @@ ___
 ___
 
 
-### CICD 
+### 7. CICD 
 
 <!-- 
 ```mermaid
@@ -250,7 +255,7 @@ sequenceDiagram
 ___
 
 
-### POC Client
+### 8. POC Client
 <div style="display:flex">
 
 ![](images/poc.png)
@@ -259,7 +264,7 @@ ___
 </div>
 ____
 
-### Approche MLOps
+### 9. Approche MLOps
 
 <div style="display:flex">
 ![mlflow local](images/mlflow.png)
@@ -268,7 +273,7 @@ ____
 </div>
 ___
 
-### Conclusions et perspectives
+### 10. Conclusions et perspectives
 
 :::: fragment
 👉 Word2Vec convaincant avec peu d'optimisations
