@@ -1,0 +1,97 @@
+<!-- livebook:{"app_settings":{"access_type":"public","auto_shutdown_ms":5000,"multi_session":true,"slug":"taggen"}} -->
+
+# Tag Client
+
+```elixir
+Mix.install([
+  {:kino, "~> 0.14.1"},
+  {:tesla, "~> 1.12"},
+  {:jason, "~> 1.4"}
+])
+```
+
+## Section
+
+```elixir
+output_frame = Kino.Frame.new(placeholder: false)
+
+Kino.Frame.render(output_frame, Kino.HTML.new("<em style='color:#aaa'>Please type a question</em>"))
+
+
+question = Kino.Input.text("Question", debounce: 1000)
+Kino.listen(question, fn event -> 
+
+
+  output =
+    case event.value do
+      "" -> Kino.HTML.new("<em style='color:#aaa'>Please type a question</em>")
+      question -> 
+        case Tesla.get!("https://clma-taggen.fly.dev/api?q=#{URI.encode(question)}") do
+          %{status: 200} = resp -> 
+            IO.inspect resp
+            resp.body
+            |> Jason.decode!()
+            |> Enum.map(&"`#{&1}` ")
+            |> Kino.Markdown.new()
+          _ -> Kino.Text.new("error")
+        end
+    end
+
+  Kino.Frame.render(output_frame, output)
+
+end)
+
+
+[question, output_frame]
+|> Enum.each(&Kino.render/1)
+:ok
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+:ok
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+%Tesla.Env{
+  method: :get,
+  url: "https://clma-taggen.fly.dev/api?q=How%20can%20I%20implement%20a%20neural%20network%20in%20Python?",
+  query: [],
+  headers: [
+    {"connection", "close"},
+    {"date", "Tue, 05 Nov 2024 14:20:12 GMT"},
+    {"via", "1.1 fly.io"},
+    {"server", "Fly/2936d2942 (2024-10-30)"},
+    {"content-length", "11"},
+    {"content-type", "application/json"},
+    {"fly-request-id", "01JBYB4XMS80C94ECEYHGAFTP5-cdg"}
+  ],
+  body: "[\"python\"]\n",
+  status: 200,
+  opts: [],
+  __module__: Tesla,
+  __client__: %Tesla.Client{fun: nil, pre: [], post: [], adapter: nil}
+}
+%Tesla.Env{
+  method: :get,
+  url: "https://clma-taggen.fly.dev/api?q=How%20can%20I%20implement%20a%20neural%20network%20in%20Python?",
+  query: [],
+  headers: [
+    {"connection", "close"},
+    {"date", "Tue, 05 Nov 2024 16:00:22 GMT"},
+    {"via", "1.1 fly.io"},
+    {"server", "Fly/2936d2942 (2024-10-30)"},
+    {"content-length", "149"},
+    {"content-type", "application/json"},
+    {"fly-request-id", "01JBYGVW3XEQ558AHTXP6MHE2W-cdg"}
+  ],
+  body: "[\"airflow\",\"deep-learning\",\"docker\",\"docker-compose\",\"google-cloud-platform\",\"gpu\",\"python\",\"python-3.x\",\"tensorflow\",\"windows-subsystem-for-linux\"]\n",
+  status: 200,
+  opts: [],
+  __module__: Tesla,
+  __client__: %Tesla.Client{fun: nil, pre: [], post: [], adapter: nil}
+}
+```

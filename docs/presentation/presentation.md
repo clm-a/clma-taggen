@@ -61,7 +61,8 @@ ____
 1. Analyse exploratoire
 1. Approche non supérvisée
 1. Approche supervisée
-1. Exposition API, déploiement continu et POC
+1. Exposition API, déploiement continu
+1. POC Client
 1. Mise en oeuvre MLOps
 1. Conclusions et perspectives
 
@@ -105,7 +106,10 @@ ____
 
 :::: left
 :::: fragment
+
 1. StackOverflow API (c.f. notebook)
+![](images/so_api.png){style="height:20vh"}
+
 ::::
 
 :::: fragment
@@ -246,11 +250,13 @@ sequenceDiagram
 ___
 
 
-### POC
+### POC Client
+<div style="display:flex">
 
+![](images/poc.png)
 
-
-
+![](images/poc2.png)
+</div>
 ____
 
 ### Approche MLOps

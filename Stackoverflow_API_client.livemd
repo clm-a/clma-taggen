@@ -1,0 +1,150 @@
+<!-- livebook:{"app_settings":{"access_type":"public","auto_shutdown_ms":60000,"output_type":"rich","slug":"stackoverflow"}} -->
+
+# StackOverflow
+
+```elixir
+Mix.install([
+  {:kino, "~> 0.13.0"},
+  {:plug, "~> 1.16"},
+  {:req, "~> 0.5.6"},
+  {:table, "~> 0.1.2"},
+  {:explorer, "~> 0.9.2"},
+  {:kino_explorer, "~> 0.1.22"}
+])
+```
+
+## Section
+
+```elixir
+frame = Kino.Frame.new()
+
+items_to_dataframe_fn = fn data ->
+  data
+  |> Enum.map(fn item ->
+    %{"protected_date" => nil, "last_edit_date" => nil}
+    |> Map.merge(item)
+    |> Map.update("owner", %{}, fn owner -> 
+        %{"accept_rate" => nil}
+        |> Map.merge(owner)
+      end)
+  end)
+  |> Explorer.DataFrame.new()
+end
+
+req_fn = fn params ->
+  params =
+    [
+      page: "1",
+      pagesize: "50",
+      tagged: "python",
+      site: "stackoverflow",
+      sort: "votes",
+      order: "desc",
+      min: "50",
+      key: System.fetch_env!("LB_STACK_EXCHANGE_KEY")
+    ]
+    |> Keyword.merge(params)
+
+  Req.get!("https://api.stackexchange.com/2.3/questions", params: params)
+end
+
+
+form = 
+    Kino.Control.form(
+    [
+      fromdate: Kino.Input.date("Date de début", required: true),
+      todate: Kino.Input.date("Date de fin")
+    ],
+    submit: "Requête API StackOverflow"
+  )
+
+
+Kino.listen(form, fn
+  %{type: :submit, data: %{fromdate: fromdate, todate: todate}}
+  when not is_nil(fromdate) and not is_nil(todate) ->
+    fromdate_epoch =
+      fromdate
+      |> DateTime.new!(~T[00:00:00])
+      |> DateTime.to_unix()
+
+    todate_epoch =
+      todate
+      |> DateTime.new!(~T[00:00:00])
+      |> DateTime.to_unix()
+
+    table =
+      req_fn.(fromdate: fromdate_epoch, todate: todate_epoch)
+      |> then(fn response ->
+        response.body["items"]
+      end)
+      |> items_to_dataframe_fn.()
+
+    Kino.Frame.render(frame, table)
+end)
+
+
+[form, frame]
+|> Enum.each(&Kino.render/1)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+:ok
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+
+16:01:44.240 [error] Kino.listen with #Function<42.39164016/1 in :erl_eval.expr/6> failed with reason:
+
+** (RuntimeError) map records must have the same columns, missing column "content_license" in %{"accepted_answer_id" => 75898717, "answer_count" => 5, "closed_date" => 1685124780, "closed_reason" => "Not suitable for this site", "creation_date" => 1680263884, "is_answered" => true, "last_activity_date" => 1704422130, "last_edit_date" => 1704294387, "link" => "https://stackoverflow.com/questions/75898276/openai-api-error-429-you-exceeded-your-current-quota-please-check-your-plan-a", "owner" => %{"accept_rate" => 89, "account_id" => 3235065, "display_name" => "Unix", "link" => "https://stackoverflow.com/users/3018860/unix", "profile_image" => "https://www.gravatar.com/avatar/edec84abcde58e8f5d45a7e5522ff1e1?s=256&d=identicon&r=PG&f=y&so-version=2", "reputation" => 2554, "user_id" => 3018860, "user_type" => "registered"}, "protected_date" => nil, "question_id" => 75898276, "score" => 163, "tags" => ["python", "prompt", "openai-api", "completion", "chatgpt-api"], "title" => "OpenAI API error 429: &quot;You exceeded your current quota, please check your plan and billing details&quot;", "view_count" => 380239}
+    (table 0.1.2) lib/table/reader/enumerable.ex:84: anonymous fn/2 in Table.Reader.Enumerable.record_values/2
+    (elixir 1.17.2) lib/enum.ex:1703: Enum."-map/2-lists^map/1-1-"/2
+    (elixir 1.17.2) lib/enum.ex:1703: Enum."-map/2-lists^map/1-1-"/2
+    (table 0.1.2) lib/table/mapper.ex:40: anonymous fn/4 in Enumerable.Table.Mapper.reduce/3
+    (elixir 1.17.2) lib/enum.ex:4858: Enumerable.List.reduce/3
+    (elixir 1.17.2) lib/enum.ex:4423: Enum.reduce/3
+    (table 0.1.2) lib/table.ex:171: Table.read_columns/2
+
+
+16:01:51.017 [error] Kino.listen with #Function<42.39164016/1 in :erl_eval.expr/6> failed with reason:
+
+** (RuntimeError) map records must have the same columns, missing column "accepted_answer_id" in %{"answer_count" => 2, "content_license" => "CC BY-SA 4.0", "creation_date" => 1682332473, "is_answered" => true, "last_activity_date" => 1717147411, "last_edit_date" => 1717147411, "link" => "https://stackoverflow.com/questions/76090979/xlsxwriter-object-has-no-attribute-save-did-you-mean-save", "owner" => %{"accept_rate" => nil, "account_id" => 28397020, "display_name" => "Straniero95", "link" => "https://stackoverflow.com/users/21722065/straniero95", "profile_image" => "https://www.gravatar.com/avatar/f3add5eda5b8d70ff0ae2ac33af92abe?s=256&d=identicon&r=PG&f=y&so-version=2", "reputation" => 571, "user_id" => 21722065, "user_type" => "registered"}, "protected_date" => 1718442670, "question_id" => 76090979, "score" => 56, "tags" => ["python", "pandas", "excel", "attributeerror", "xlsxwriter"], "title" => "&#39;XlsxWriter&#39; object has no attribute &#39;save&#39;. Did you mean: &#39;_save&#39;?", "view_count" => 97027}
+    (table 0.1.2) lib/table/reader/enumerable.ex:84: anonymous fn/2 in Table.Reader.Enumerable.record_values/2
+    (elixir 1.17.2) lib/enum.ex:1703: Enum."-map/2-lists^map/1-1-"/2
+    (table 0.1.2) lib/table/mapper.ex:40: anonymous fn/4 in Enumerable.Table.Mapper.reduce/3
+    (elixir 1.17.2) lib/enum.ex:4858: Enumerable.List.reduce/3
+    (elixir 1.17.2) lib/enum.ex:4423: Enum.reduce/3
+    (table 0.1.2) lib/table.ex:171: Table.read_columns/2
+    (explorer 0.9.2) lib/explorer/polars_backend/data_frame.ex:520: Explorer.PolarsBackend.DataFrame.from_tabular/2
+
+
+16:01:54.816 [error] Kino.listen with #Function<42.39164016/1 in :erl_eval.expr/6> failed with reason:
+
+** (RuntimeError) map records must have the same columns, missing column "accepted_answer_id" in %{"answer_count" => 7, "content_license" => "CC BY-SA 4.0", "creation_date" => 1687697713, "is_answered" => true, "last_activity_date" => 1727364891, "last_edit_date" => 1727363797, "link" => "https://stackoverflow.com/questions/76550506/typeerror-webdriver-init-got-an-unexpected-keyword-argument-executable-p", "owner" => %{"accept_rate" => nil, "account_id" => 28817288, "display_name" => "Huu Quy", "link" => "https://stackoverflow.com/users/22070619/huu-quy", "profile_image" => "https://lh3.googleusercontent.com/a/AAcHTtcYKHtpwzBp4RY__56t-b2OcOoQKQGGnSsek1UkcA=k-s256", "reputation" => 511, "user_id" => 22070619, "user_type" => "registered"}, "protected_date" => 1727748771, "question_id" => 76550506, "score" => 51, "tags" => ["python", "python-3.x", "google-chrome", "selenium-webdriver", "selenium-chromedriver"], "title" => "TypeError: WebDriver.__init__() got an unexpected keyword argument &#39;executable_path&#39; in Selenium Python", "view_count" => 180554}
+    (table 0.1.2) lib/table/reader/enumerable.ex:84: anonymous fn/2 in Table.Reader.Enumerable.record_values/2
+    (elixir 1.17.2) lib/enum.ex:1703: Enum."-map/2-lists^map/1-1-"/2
+    (table 0.1.2) lib/table/mapper.ex:40: anonymous fn/4 in Enumerable.Table.Mapper.reduce/3
+    (elixir 1.17.2) lib/enum.ex:4858: Enumerable.List.reduce/3
+    (elixir 1.17.2) lib/enum.ex:4423: Enum.reduce/3
+    (table 0.1.2) lib/table.ex:171: Table.read_columns/2
+    (explorer 0.9.2) lib/explorer/polars_backend/data_frame.ex:520: Explorer.PolarsBackend.DataFrame.from_tabular/2
+
+
+16:02:00.480 [error] Kino.listen with #Function<42.39164016/1 in :erl_eval.expr/6> failed with reason:
+
+** (RuntimeError) map records must have the same columns, missing column "accepted_answer_id" in %{"answer_count" => 7, "content_license" => "CC BY-SA 4.0", "creation_date" => 1687697713, "is_answered" => true, "last_activity_date" => 1727364891, "last_edit_date" => 1727363797, "link" => "https://stackoverflow.com/questions/76550506/typeerror-webdriver-init-got-an-unexpected-keyword-argument-executable-p", "owner" => %{"accept_rate" => nil, "account_id" => 28817288, "display_name" => "Huu Quy", "link" => "https://stackoverflow.com/users/22070619/huu-quy", "profile_image" => "https://lh3.googleusercontent.com/a/AAcHTtcYKHtpwzBp4RY__56t-b2OcOoQKQGGnSsek1UkcA=k-s256", "reputation" => 511, "user_id" => 22070619, "user_type" => "registered"}, "protected_date" => 1727748771, "question_id" => 76550506, "score" => 51, "tags" => ["python", "python-3.x", "google-chrome", "selenium-webdriver", "selenium-chromedriver"], "title" => "TypeError: WebDriver.__init__() got an unexpected keyword argument &#39;executable_path&#39; in Selenium Python", "view_count" => 180554}
+    (table 0.1.2) lib/table/reader/enumerable.ex:84: anonymous fn/2 in Table.Reader.Enumerable.record_values/2
+    (elixir 1.17.2) lib/enum.ex:1703: Enum."-map/2-lists^map/1-1-"/2
+    (table 0.1.2) lib/table/mapper.ex:40: anonymous fn/4 in Enumerable.Table.Mapper.reduce/3
+    (elixir 1.17.2) lib/enum.ex:4858: Enumerable.List.reduce/3
+    (elixir 1.17.2) lib/enum.ex:4423: Enum.reduce/3
+    (table 0.1.2) lib/table.ex:171: Table.read_columns/2
+    (explorer 0.9.2) lib/explorer/polars_backend/data_frame.ex:520: Explorer.PolarsBackend.DataFrame.from_tabular/2
+
+
+```
+
+<!-- livebook:{"offset":8866,"stamp":{"token":"XCP.v2hzYRaCEEu_QVWX354exbvIJiJ015bgSphfiyetrJffeiqx_lFFiFrhWPj4wLupXMReiAPpKHs35BJEHMkURa_NM6HYgRUxCwIvue75BHKX6mnvDbRdMPDGV2SXXEZ2MfsZjcNcl3eUFbLMNhYk0LBaJgiIGhRfzjHHCQ98T6KrxZoDyqoNtTNKWGuTjQ4dEvkr45_VP3EtVhYSnYUIYMFGrzXnUPcTAmd1gYK3lVM-gpjslKmOpnO83sW1RAriRc4XzxldbqbUn5VPruZJWu9MZSSIwTeePGTGzlN1ADAyY-J6s48IDg","version":2}} -->
