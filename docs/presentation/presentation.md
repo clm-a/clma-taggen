@@ -61,7 +61,7 @@ ____
 1. Analyse exploratoire
 1. Approche non supérvisée
 1. Approche supervisée
-1. Exposition API et déploiement continu
+1. Exposition API, déploiement continu et POC
 1. Mise en oeuvre MLOps
 1. Conclusions et perspectives
 
@@ -88,19 +88,20 @@ ____
 **Pertinence** | Les données non pertinentes sont filtrées
 **Conservation** | Modèle réentraîné périodiquement
 **Sécurité**	| Stockage chiffré, accès restreint par mot de passe
-**Droit des personnes** | Mises à jour dynamiques selon les CGV de StackOverflow
+**Droit des personnes** | Respect et application des CGV de StackOverflow
 ::::
 
 ____
 
+
+## Récupération des données
 
 <style>
 .left *{
   margin-left:5vw!important;
   text-align:left!important;
 }
-  </style>
-## Récupération des données
+</style>
 
 :::: left
 :::: fragment
@@ -131,24 +132,120 @@ ___
 
 ### Approche supervisée : Word2Vec
 
+:::: fragment
+👉 Entrainement rapide sur jeu de données complet
+::::
+
+:::: fragment
+👉 Score F1 0.43
+::::
+
+:::: fragment
+![](images/word2vec.png)
+::::
+
 ___
 
 ### Approche supervisée : USE
+
+:::: fragment
+👉 Prétraitement contre-productif
+::::
+
+:::: fragment
+👉 Score F1 0.35
+::::
+
+:::: fragment
+![](images/use.png)
+::::
 
 ___
 
 ### Approche supervisée : Bert
 
+:::: fragment
+👉 Prétraitement contre-productif
+::::
+
+:::: fragment
+👉 3 Go GPU RAM / 1 000 enregistrements
+::::
+
+:::: fragment
+👉 Score F1 0.41
+::::
+
+:::: fragment
+![](images/bert.png)
+::::
 
 ___
 
 ### Exposition API et déploiment continu
 
+![CI/CD](images/cicd.png){style="height:40vh;width:auto"}
+
+
+:::: fragment
+👉 Sérialisation Joblib / id2word
+::::
+
+:::: fragment
+👉 Flask / Fly.io
+::::
+
+
 ___
+
+
+### CICD
+
+<!-- 
+```mermaid
+sequenceDiagram
+    Local->>+GHAction: Push
+
+    GHAction->>GHAction: Train
+    GHAction->>GHAction: Test (w/ artifacts)
+    GHAction->>+Fly: Deploy
+    GHAction->>Fly Image builder: Send context (w/ artifacts)
+    Fly Image builder->Fly Image builder: Build and host docker image
+    Fly Image builder-/->Fly: pull image
+```
+-->
+
+![](images/mermaid.png){style="height:50vh"}
+___
+
+
+### POC
+
+
+
+
+____
 
 ### Approche MLOps
 
+<div style="display:flex">
+![mlflow local](images/mlflow.png)
 
+![Notes techniques](images/mlops_pdf.png)
+</div>
 ___
 
 ### Conclusions et perspectives
+
+:::: fragment
+👉 Word2Vec convaincant sans beaucoup d'optimisations
+::::
+
+:::: fragment
+👉 Difficulté de mise en oeuvre de BERT y compris en batch
+::::
+
+:::: fragment
+👉 Enjeu important dans l'optimisation des paramètres
+::::
+

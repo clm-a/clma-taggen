@@ -38,9 +38,6 @@ def is_english(text):
     except:
         return False
 
-def filter_tokens(token):
-  return token.pos_ in ["NOUN", "PROPN"] and token.text.lower() not in STOP_WORDS
-
 def clean(input_file='data/monthly_best_1000_combined.csv', output_file='data/monthly_best_1000_cleaned.csv'):
   tqdm.pandas()
 

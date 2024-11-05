@@ -151,7 +151,7 @@ style="display:inline-flex;align-items: start;margin-left:auto; margin-right:aut
 <li>Analyse exploratoire</li>
 <li>Approche non supérvisée</li>
 <li>Approche supervisée</li>
-<li>Exposition API et déploiement continu</li>
+<li>Exposition API, déploiement continu et POC</li>
 <li>Mise en oeuvre MLOps</li>
 <li>Conclusions et perspectives</li>
 </ol>
@@ -203,24 +203,21 @@ de passe</td>
 </tr>
 <tr class="odd">
 <td style="text-align: right;"><strong>Droit des personnes</strong></td>
-<td style="text-align: left;">Mises à jour dynamiques selon les CGV de
+<td style="text-align: left;">Respect et application des CGV de
 StackOverflow</td>
 </tr>
 </tbody>
 </table>
 </div>
 </section>
-<section class="slide level2">
-
+<section id="récupération-des-données" class="slide level2">
+<h2>Récupération des données</h2>
 <style>
 .left *{
   margin-left:5vw!important;
   text-align:left!important;
 }
-  </style>
-</section>
-<section id="récupération-des-données" class="slide level2">
-<h2>Récupération des données</h2>
+</style>
 <div class="left">
 <div class="fragment">
 <ol type="1">
@@ -249,27 +246,106 @@ LDA</h3>
 
 <h3 id="approche-supervisée-word2vec">Approche supervisée :
 Word2Vec</h3>
+<div class="fragment">
+<p>👉 Entrainement rapide sur jeu de données complet</p>
+</div>
+<div class="fragment">
+<p>👉 Score F1 0.43</p>
+</div>
+<div class="fragment">
+<p><img data-src="images/word2vec.png" /></p>
+</div>
 </section>
 <section class="slide level2">
 
 <h3 id="approche-supervisée-use">Approche supervisée : USE</h3>
+<div class="fragment">
+<p>👉 Prétraitement contre-productif</p>
+</div>
+<div class="fragment">
+<p>👉 Score F1 0.35</p>
+</div>
+<div class="fragment">
+<p><img data-src="images/use.png" /></p>
+</div>
 </section>
 <section class="slide level2">
 
 <h3 id="approche-supervisée-bert">Approche supervisée : Bert</h3>
+<div class="fragment">
+<p>👉 Prétraitement contre-productif</p>
+</div>
+<div class="fragment">
+<p>👉 3 Go GPU RAM / 1 000 enregistrements</p>
+</div>
+<div class="fragment">
+<p>👉 Score F1 0.41</p>
+</div>
+<div class="fragment">
+<p><img data-src="images/bert.png" /></p>
+</div>
 </section>
 <section class="slide level2">
 
 <h3 id="exposition-api-et-déploiment-continu">Exposition API et
 déploiment continu</h3>
+<figure>
+<img data-src="images/cicd.png" style="height:40vh;width:auto"
+alt="CI/CD" />
+<figcaption aria-hidden="true">CI/CD</figcaption>
+</figure>
+<div class="fragment">
+<p>👉 Sérialisation Joblib / id2word</p>
+</div>
+<div class="fragment">
+<p>👉 Flask / Fly.io</p>
+</div>
+</section>
+<section class="slide level2">
+
+<h3 id="cicd">CICD</h3>
+<!-- 
+```mermaid
+sequenceDiagram
+    Local->>+GHAction: Push
+
+    GHAction->>GHAction: Train
+    GHAction->>GHAction: Test (w/ artifacts)
+    GHAction->>+Fly: Deploy
+    GHAction->>Fly Image builder: Send context (w/ artifacts)
+    Fly Image builder->Fly Image builder: Build and host docker image
+    Fly Image builder-/->Fly: pull image
+```
+-->
+<p><img data-src="images/mermaid.png" style="height:50vh" /> ___</p>
+<h3 id="poc">POC</h3>
 </section>
 <section class="slide level2">
 
 <h3 id="approche-mlops">Approche MLOps</h3>
+<div style="display:flex">
+<figure>
+<img data-src="images/mlflow.png" alt="mlflow local" />
+<figcaption aria-hidden="true">mlflow local</figcaption>
+</figure>
+<figure>
+<img data-src="images/mlops_pdf.png" alt="Notes techniques" />
+<figcaption aria-hidden="true">Notes techniques</figcaption>
+</figure>
+</div>
 </section>
 <section class="slide level2">
 
 <h3 id="conclusions-et-perspectives">Conclusions et perspectives</h3>
+<div class="fragment">
+<p>👉 Word2Vec convaincant sans beaucoup d’optimisations</p>
+</div>
+<div class="fragment">
+<p>👉 Difficulté de mise en oeuvre de BERT y compris en batch</p>
+</div>
+<div class="fragment">
+<p>👉 Enjeu important dans l’optimisation des paramètres</p>
+</div>
 </section>
     </div>
   </div>
